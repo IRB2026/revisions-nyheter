@@ -6,7 +6,7 @@ on:
 
 # Tvingar Node 24 (tar bort det röröda felet, men kan ge gul varning)
 env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true
 
 jobs:
   build:
