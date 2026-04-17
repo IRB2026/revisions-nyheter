@@ -2,17 +2,21 @@ name: Daily News Update
 on:
   schedule:
     - cron: '0 5 * * *' # Körs varje morgon kl 05:00
-  workflow_dispatch: # Gör att du kan starta den manuellt
+  workflow_dispatch: 
+
+# Här lägger vi till inställningen som GitHub efterfrågar:
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4 # Uppdaterad från v3 till v4
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v5 # Uppdaterad från v4 till v5
+        uses: actions/setup-python@v5
         with:
           python-version: '3.9'
 
