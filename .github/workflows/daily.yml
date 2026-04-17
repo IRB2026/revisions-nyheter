@@ -8,15 +8,20 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4 # Uppdaterad från v3 till v4
+
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5 # Uppdaterad från v4 till v5
         with:
           python-version: '3.9'
+
       - name: Install dependencies
         run: pip install feedparser
+
       - name: Run scraper
         run: python scraper.py
+
       - name: Commit and push changes
         run: |
           git config --global user.name 'NewsBot'
