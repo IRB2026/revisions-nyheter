@@ -4,12 +4,16 @@ on:
     - cron: '0 5 * * *'
   workflow_dispatch: 
 
+# Tvingar Node 24 (tar bort det röröda felet, men kan ge gul varning)
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
 jobs:
   build:
     runs-on: ubuntu-latest
-    # Här lägger vi miljövariabeln nu, säkert och korrekt:
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+    # VIKTIGT: Ger boten tillåtelse att spara nyhetsfilen i ditt bibliotek
+    permissions:
+      contents: write
     
     steps:
       - name: Checkout repository
@@ -28,8 +32,9 @@ jobs:
 
       - name: Commit and push changes
         run: |
-          git config --global user.name 'NewsBot'
-          git config --global user.email 'bot@example.com'
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git add news_history.json
-          git commit -m "Uppdaterat nyheter" || exit 0
+          # Vi lägger till "|| true" så att den inte stannar om det inte finns några nya nyheter idag
+          git commit -m "Uppdaterat nyheter: $(date)" || true
           git push
