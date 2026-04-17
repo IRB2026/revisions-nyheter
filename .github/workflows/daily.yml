@@ -1,40 +1,26 @@
 name: Daily News Update
 on:
   schedule:
-    - cron: '0 5 * * *'
-  workflow_dispatch: 
-
-# Tvingar Node 24 (tar bort det röröda felet, men kan ge gul varning)
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true
+    - cron: '0 5 * * *' # Körs varje morgon kl 05:00
+  workflow_dispatch: # Gör att du kan starta den manuellt
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    # VIKTIGT: Ger boten tillåtelse att spara nyhetsfilen i ditt bibliotek
-    permissions:
-      contents: write
-    
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
+      - uses: actions/checkout@v3
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v4
         with:
           python-version: '3.9'
-
       - name: Install dependencies
         run: pip install feedparser
-
       - name: Run scraper
         run: python scraper.py
-
       - name: Commit and push changes
         run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git config --global user.name 'NewsBot'
+          git config --global user.email 'bot@example.com'
           git add news_history.json
-          # Vi lägger till "|| true" så att den inte stannar om det inte finns några nya nyheter idag
-          git commit -m "Uppdaterat nyheter: $(date)" || true
+          git commit -m "Uppdaterat nyheter" || exit 0
           git push
