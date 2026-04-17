@@ -1,0 +1,26 @@
+name: Daily News Update
+on:
+  schedule:
+    - cron: '0 5 * * *' # Körs varje morgon kl 05:00
+  workflow_dispatch: # Gör att du kan starta den manuellt
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      - name: Install dependencies
+        run: pip install feedparser
+      - name: Run scraper
+        run: python scraper.py
+      - name: Commit and push changes
+        run: |
+          git config --global user.name 'NewsBot'
+          git config --global user.email 'bot@example.com'
+          git add news_history.json
+          git commit -m "Uppdaterat nyheter" || exit 0
+          git push
